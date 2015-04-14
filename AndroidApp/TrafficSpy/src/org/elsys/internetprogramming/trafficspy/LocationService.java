@@ -21,7 +21,7 @@ public class LocationService extends Service implements MyLocationListener {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		
 		this.init();
 	}
 
