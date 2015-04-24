@@ -15,8 +15,6 @@ function handle_geolocation_query(position) {
 	map = new google.maps.Map(document.getElementById("map"), mapOptions);
 	
 	getMarkers();
-	
-	addMarker(42.672798698720065, 23.303494937717915);
 }
 
 function getMarkers() {
