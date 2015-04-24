@@ -34,23 +34,24 @@ function getMarkers() {
 }
 
 function addMarker(latitude, longitude, address) {
-	markerAddress = '<p><b>' + address + '</b><p>'
+	content = '<p><b>' + address + '</b><p>'
 	
-	var infowindow = new google.maps.InfoWindow({
-		content: markerAddress
-	});
+	var infowindow = new google.maps.InfoWindow();
 	
 	myLatlng = new google.maps.LatLng(latitude, longitude);
 	
 	marker = new google.maps.Marker({
 		position: myLatlng,
-		title: 'Hello World!'
   	});
 	marker.setMap(map);
 	
-	google.maps.event.addListener(marker, 'click', function() {
-		infowindow.open(map,marker);
-	});
+	google.maps.event.addListener(marker,'click', (
+		function(marker,content,infowindow){ 
+			return function() {
+				infowindow.setContent(content);
+				infowindow.open(map,marker);
+			};
+		})(marker,content,infowindow));  	
 }
 
 google.maps.event.addDomListener(window, 'load', initiate_geolocation);
