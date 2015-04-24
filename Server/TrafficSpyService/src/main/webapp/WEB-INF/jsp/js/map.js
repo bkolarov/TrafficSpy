@@ -1,5 +1,5 @@
 var map;
-			
+
 function initiate_geolocation() {  
     navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
 }  
@@ -24,7 +24,7 @@ function getMarkers() {
 		 url:"http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers",
 		 success:function(json) {
 			json.forEach(function(obj) { 
-			addMarker(obj.latitude, obj.longitude); 
+			addMarker(obj.latitude, obj.longitude, obj.address); 
 		});
 		 },
 		 error:function(){
@@ -35,7 +35,13 @@ function getMarkers() {
 
 }
 
-function addMarker(latitude, longitude) {
+function addMarker(latitude, longitude, address) {
+	markerAddress = '<p><b>' + address + '</b><p>'
+	
+	var infowindow = new google.maps.InfoWindow({
+		content: markerAddress
+	});
+	
 	myLatlng = new google.maps.LatLng(latitude, longitude);
 	
 	marker = new google.maps.Marker({
@@ -43,6 +49,10 @@ function addMarker(latitude, longitude) {
 		title: 'Hello World!'
   	});
 	marker.setMap(map);
+	
+	google.maps.event.addListener(marker, 'click', function() {
+		infowindow.open(map,marker);
+	});
 }
 
 google.maps.event.addDomListener(window, 'load', initiate_geolocation);
