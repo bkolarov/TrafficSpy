@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.log4j.Logger;
 import org.elsys.internetprogramming.trafficspy.server.Marker;
+import org.elsys.internetprogramming.trafficspy.server.controller.MarkerController;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Transactional
 public class MarkerDaoImplementation implements MarkerDaoInterface {
-
+	private Logger logger = Logger.getLogger(MarkerController.class.getName());
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -22,12 +24,13 @@ public class MarkerDaoImplementation implements MarkerDaoInterface {
 	}
 
 	@Override
-	public void deleteMarker(int markerId) {
+	public void deleteMarker(long markerId) {
+		logger.info("DAO DELETE MARKER");
 		this.sessionFactory.getCurrentSession().delete(this.getMarker(markerId));
 	}
 
 	@Override
-	public Marker getMarker(int markerId) {
+	public Marker getMarker(long markerId) {
 		return (Marker) this.sessionFactory.getCurrentSession().get(Marker.class, markerId);
 	}
 

@@ -35,9 +35,20 @@ public class MarkerController {
 		return marker;
 	}
 	
+	@RequestMapping(value="/markers/delete", method=RequestMethod.DELETE)
+	public @ResponseBody String deleteMarker(@RequestParam(value="id", defaultValue="") String id) {
+		logger.info("HANDLE DELETE REQUEST");
+		if (!id.equals("")) {
+			logger.info(id);
+			this.markerService.deleteMarker(Long.parseLong(id));
+		}
+		return "";
+	}
+	
 	@RequestMapping(value="/map")
 	public String trafficSpy() {
 		logger.info("HANDLE MAP");
 		return "index";
 	}
+	
 }

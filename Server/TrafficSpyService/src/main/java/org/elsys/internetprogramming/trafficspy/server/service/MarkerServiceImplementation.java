@@ -19,12 +19,12 @@ public class MarkerServiceImplementation implements MarkerServiceInterface {
 	}
 
 	@Transactional
-	public void deleteMarker(int markerId) {
+	public void deleteMarker(long markerId) {
 		this.markerDao.deleteMarker(markerId);
 	}
 
 	@Transactional
-	public Marker getMarker(int markerId) {
+	public Marker getMarker(long markerId) {
 		return this.markerDao.getMarker(markerId);
 	}
 

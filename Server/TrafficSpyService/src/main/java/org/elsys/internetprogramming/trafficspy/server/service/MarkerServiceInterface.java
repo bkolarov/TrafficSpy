@@ -6,7 +6,7 @@ import org.elsys.internetprogramming.trafficspy.server.Marker;
 
 public interface MarkerServiceInterface {
 	public void addMarker(Marker marker);
-	public void deleteMarker(int markerId);
-	public Marker getMarker(int markerId);
+	public void deleteMarker(long markerId);
+	public Marker getMarker(long markerId);
 	public List<Marker> getAllMarkers();
 }
