@@ -22,6 +22,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		this.init();
+		this.map.getMarkers();
 	}
 
 	private void init() {

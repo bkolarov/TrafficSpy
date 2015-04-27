@@ -1,20 +1,20 @@
 package org.elsys.internetprogramming.trafficspy;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.BroadcastReceiver;
+import src.org.elsys.internetprogramming.trafficspy.URLs;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -104,35 +104,53 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 
 	private void sendMarker(String address, LatLng point) {
 		Log.i(TAG, address);
-		final String[] addressSplitted = address.split(" "); 
+		final String[] addressSplitted = address.split(" ");
 		final String city = addressSplitted[addressSplitted.length - 1];
-		address = address.replace(" " + city, "").replace("„", "").replace("“", "").replace("â", "q");
-		final Marker marker = new Marker(point.longitude, point.latitude, address, city);
-		
-		
+		address = address.replace(" " + city, "").replace("„", "")
+				.replace("“", "").replace("â", "q");
+		final Marker marker = new Marker(point.longitude, point.latitude,
+				address, city);
+
 		final String locationJsonString = this.gson.toJson(marker);
-		try {
-			final RestServiceClient restServiceClient = new RestServiceClient(URLs.URL_POST_NEW_MARKER, locationJsonString, new HttpRequesterCallback() {
-				
-				@Override
-				public void onResponse(String responseMessage) {
-					Log.i(TAG, responseMessage);
-				}
-				
-				@Override
-				public void onError(String responseError) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
+		final RestServiceClient restServiceClient = new RestServiceClient(new RestClientCallback() {
 			
-			restServiceClient.addHeader("Content-Type", "application/json");
-			restServiceClient.execute();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			@Override
+			public void onResponse(String response) {
+				Log.i(TAG, "response");
+				
+			}
+		});
 		
+		restServiceClient.doPost(URLs.URL_POST_NEW_MARKER, locationJsonString);
+	}
+
+	public void getMarkers() {
+		final RestServiceClient restClient = new RestServiceClient(
+				new RestClientCallback() {
+
+					@Override
+					public void onResponse(String response) {
+						try {
+							final JSONArray markersArray = new JSONArray(
+									response);
+
+							for (int markerCount = 0; markerCount < markersArray.length(); markerCount++) {
+								final JSONObject marker = markersArray.getJSONObject(markerCount);
+								Log.i(TAG, marker.toString());
+								
+								final double latitude = marker.getDouble("latitude");
+								final double longitude = marker.getDouble("longitude");
+								map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
+							}
+							
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+				});
+		restClient.doGet(URLs.URL_MARKERS);
 	}
 
 	@Override
