@@ -21,9 +21,9 @@ function getMarkers() {
 	$.ajax({
 		 url:"http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers",
 		 success:function(json) {
-			json.forEach(function(obj) { 
-			addMarker(obj.latitude, obj.longitude, obj.address, obj.id); 
-		});
+				json.forEach(function(obj) { 
+				addMarker(obj.latitude, obj.longitude, obj.address, obj.id); 
+			});
 		 },
 		 error:function(){
 			 alert("Error");
@@ -59,7 +59,7 @@ function deleteMarker() {
 	currentMarker.setMap(null);
 	$.ajax({
 		url: "http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers/delete?id=" + currentMarker.get("id"),
-		type: 'DELETE'
+		type: 'DELETE',
 		success: function(result) {
 			console.log(result);
 		}
