@@ -55,4 +55,15 @@ function addMarker(latitude, longitude, address, id) {
 		})(marker,content,infowindow));  	
 }
 
+function deleteMarker() {
+	currentMarker.setMap(null);
+	$.ajax({
+		url: "http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers/delete?id=" + currentMarker.get("id"),
+		type: 'DELETE'
+		success: function(result) {
+			console.log(result);
+		}
+	});
+}
+
 google.maps.event.addDomListener(window, 'load', initiate_geolocation);
