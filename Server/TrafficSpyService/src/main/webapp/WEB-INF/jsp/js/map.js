@@ -34,7 +34,7 @@ function getMarkers() {
 }
 
 function addMarker(latitude, longitude, address, id) {
-	content = '<p><b>' + address + '</b><p> <button type="button">delete</button> '
+	content = '<p><b>' + address + '</b><p> <button type="button" onClick="deleteMarker()">delete</button> '
 	
 	var infowindow = new google.maps.InfoWindow();
 	
