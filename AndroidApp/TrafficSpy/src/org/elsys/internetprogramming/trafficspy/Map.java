@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import src.org.elsys.internetprogramming.trafficspy.URLs;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -68,12 +67,11 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 
 	@Override
 	public void onMapClick(LatLng point) {
-		this.map.addMarker(new MarkerOptions().position(point));
-		this.sendMarker(getPointAddress(point), point);
+		this.sendMarker(getPointAddress(this.context, point), point);
 	}
 
-	private String getPointAddress(LatLng point) {
-		final Geocoder geocoder = new Geocoder(this.context, Locale.ENGLISH);
+	public static String getPointAddress(Context context, LatLng point) {
+		final Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
 
 		final StringBuilder address = new StringBuilder();
 
@@ -93,16 +91,16 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 			e.printStackTrace();
 		}
 
-		return this.cyrillicToLatin(address.toString());
+		return cyrillicToLatin(address.toString());
 	}
 
-	private String cyrillicToLatin(String cyrillic) {
+	private static String cyrillicToLatin(String cyrillic) {
 		String id = "Any-Latin;";
 		String latin = Transliterator.getInstance(id).transform(cyrillic);
 		return latin;
 	}
 
-	private void sendMarker(String address, LatLng point) {
+	private void sendMarker(String address,final LatLng point) {
 		Log.i(TAG, address);
 		final String[] addressSplitted = address.split(" ");
 		final String city = addressSplitted[addressSplitted.length - 1];
@@ -117,7 +115,7 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 			@Override
 			public void onResponse(String response) {
 				Log.i(TAG, "response");
-				
+				map.addMarker(new MarkerOptions().position(point));
 			}
 		});
 		
