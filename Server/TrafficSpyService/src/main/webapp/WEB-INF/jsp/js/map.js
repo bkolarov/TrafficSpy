@@ -1,5 +1,5 @@
 var map;
-
+var currentMarker;
 function initiate_geolocation() {  
     navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
 }  
@@ -50,6 +50,7 @@ function addMarker(latitude, longitude, address, id) {
 			return function() {
 				infowindow.setContent(content);
 				infowindow.open(map,marker);
+				currentMarker = marker;
 			};
 		})(marker,content,infowindow));  	
 }
