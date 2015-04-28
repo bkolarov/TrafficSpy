@@ -54,7 +54,7 @@ function addMarker(latitude, longitude, address, id) {
 			};
 		})(marker,content,infowindow));  	
 }
-
+/*
 function deleteMarker() {
 	currentMarker.setMap(null);
 	$.ajax({
@@ -65,5 +65,5 @@ function deleteMarker() {
 		}
 	});
 }
-
+*/
 google.maps.event.addDomListener(window, 'load', initiate_geolocation);
