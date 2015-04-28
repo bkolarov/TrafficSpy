@@ -56,6 +56,7 @@ function addMarker(latitude, longitude, address, id) {
 }
 
 function deleteMarker() {
+	console.log('deleteMarker()');
 	currentMarker.setMap(null);
 	$.ajax({
 		url: "http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers/delete?id=" + currentMarker.get("id"),
