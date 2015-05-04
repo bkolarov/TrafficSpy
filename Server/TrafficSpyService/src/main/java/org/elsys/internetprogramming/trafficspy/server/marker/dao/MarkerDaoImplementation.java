@@ -1,4 +1,4 @@
-package org.elsys.internetprogramming.trafficspy.server.dao;
+package org.elsys.internetprogramming.trafficspy.server.marker.dao;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.elsys.internetprogramming.trafficspy.server.Marker;
-import org.elsys.internetprogramming.trafficspy.server.controller.MarkerController;
+import org.elsys.internetprogramming.trafficspy.server.marker.controller.MarkerController;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

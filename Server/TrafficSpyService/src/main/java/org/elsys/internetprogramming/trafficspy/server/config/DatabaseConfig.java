@@ -31,6 +31,9 @@ public class DatabaseConfig {
 	@Value("${hibernate.dialect}")
 	private String HIBERNATE_DIALECT;
 
+	@Value("${hibernate.format_sql}")
+	private String HIBERNATE_FORMAT_SQL;
+	
 	@Value("${hibernate.show_sql}")
 	private String HIBERNATE_SHOW_SQL;
 
@@ -57,6 +60,7 @@ public class DatabaseConfig {
 		sessionFactoryBean.setPackagesToScan(ENTITYMANAGER_PACKAGES_TO_SCAN);
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.put("hibernate.dialect", HIBERNATE_DIALECT);
+		hibernateProperties.put("hibernate.format_sql", HIBERNATE_FORMAT_SQL);
 		hibernateProperties.put("hibernate.show_sql", HIBERNATE_SHOW_SQL);
 		hibernateProperties.put("hibernate.hbm2ddl.auto",
 				HIBERNATE_HBM2DDL_AUTO);

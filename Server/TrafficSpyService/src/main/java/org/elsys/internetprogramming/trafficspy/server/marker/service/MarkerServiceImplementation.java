@@ -1,9 +1,9 @@
-package org.elsys.internetprogramming.trafficspy.server.service;
+package org.elsys.internetprogramming.trafficspy.server.marker.service;
 
 import java.util.List;
 
 import org.elsys.internetprogramming.trafficspy.server.Marker;
-import org.elsys.internetprogramming.trafficspy.server.dao.MarkerDaoInterface;
+import org.elsys.internetprogramming.trafficspy.server.marker.dao.MarkerDaoInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
