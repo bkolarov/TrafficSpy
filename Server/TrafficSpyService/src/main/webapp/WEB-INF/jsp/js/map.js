@@ -63,6 +63,10 @@ function deleteMarker() {
 		type: 'DELETE',
 		success: function(result) {
 			console.log(result);
+		},
+		error: function(error) {
+			console.log("http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers/delete?id=" + currentMarker.get("id"));
+			console.log(error);
 		}
 	});
 }
