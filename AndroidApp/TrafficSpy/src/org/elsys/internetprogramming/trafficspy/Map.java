@@ -105,7 +105,7 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 		final String[] addressSplitted = address.split(" ");
 		final String city = addressSplitted[addressSplitted.length - 1];
 		address = address.replace(" " + city, "").replace("„", "")
-				.replace("“", "").replace("â", "q");
+				.replace("“", "").replace("â", "q").replace("ž", "zh").replace("ŝ", "sht").trim();
 		final Marker marker = new Marker(point.longitude, point.latitude,
 				address, city);
 

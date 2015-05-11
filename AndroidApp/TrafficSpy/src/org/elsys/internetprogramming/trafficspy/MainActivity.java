@@ -20,7 +20,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		RestServiceClient.COOKIES = getIntent().getStringExtra("cookie");
+		
 		this.init();
 		this.map.getMarkers();
 	}
@@ -33,7 +35,7 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		super.startService(new Intent(super.getApplicationContext(), LocationService.class));
+		//super.startService(new Intent(super.getApplicationContext(), LocationService.class));
 		super.onPause();
 	}
 }
