@@ -25,14 +25,15 @@ public class MarkerController {
 	private MarkerServiceInterface markerService;
 	
 	@RequestMapping(value="/markers", method=RequestMethod.GET)
-	@Secured ({"ROLE_USER", "ROLE_ADMIN"})
 	public @ResponseBody List<Marker> getMarkers(@RequestParam(value="city", defaultValue="") String city) {
 		logger.info("HANDLE GET REQUEST");
+		
+		
+		
 		return this.markerService.getAllMarkers();
 	}
 	
 	@RequestMapping(value="/markers/new", method=RequestMethod.POST)
-	@Secured ({"ROLE_USER", "ROLE_ADMIN"})
 	public @ResponseBody Marker addMarker(@RequestBody Marker marker) {
 		logger.info("HANDLE POST REQUEST");
 		
@@ -41,18 +42,15 @@ public class MarkerController {
 	}
 	
 	@RequestMapping(value="/markers/delete", method=RequestMethod.DELETE)
-	@Secured ("ROLE_ADMIN")
-	public @ResponseBody String deleteMarker(@RequestParam(value="id", defaultValue="") String id) {
+	@Secured("ROLE_ADMIN")
+	public @ResponseBody void deleteMarker(@RequestParam(value="id") String id) {
 		logger.info("HANDLE DELETE REQUEST");
-		if (!id.equals("")) {
-			logger.info(id);
-			this.markerService.deleteMarker(Long.parseLong(id));
-		}
-		return "";
+		logger.info(id);
+		
+		this.markerService.deleteMarker(Long.parseLong(id));
 	}
 	
 	@RequestMapping(value="/admin/map")
-	@Secured ("ROLE_ADMIN")
 	public String trafficSpy() {
 		logger.info("HANDLE MAP");
 		return "index";
