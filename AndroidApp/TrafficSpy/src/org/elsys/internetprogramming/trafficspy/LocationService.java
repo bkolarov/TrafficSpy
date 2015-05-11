@@ -64,7 +64,7 @@ public class LocationService extends Service implements MyLocationListener, Rest
 
 	@Override
 	public void onResponse(String response) {
-		Log.i(TAG, response);
+		//Log.i(TAG, response);
 		
 	}
 }

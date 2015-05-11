@@ -35,7 +35,18 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		//super.startService(new Intent(super.getApplicationContext(), LocationService.class));
+		super.startService(new Intent(super.getApplicationContext(), LocationService.class));
 		super.onPause();
 	}
+
+	@Override
+	public void onBackPressed() {
+		final Intent intent = new Intent(super.getApplicationContext(), LoginActivity.class);
+		intent.putExtra("logout", true);
+		super.stopService(new Intent(super.getApplicationContext(), LocationService.class));
+		super.startActivity(intent);
+		super.finish();
+	}
+	
+	
 }

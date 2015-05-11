@@ -33,7 +33,14 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		this.init();
 		this.setWebViewSettings();
-		this.loginWebView.loadUrl("http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers");
+		
+		if (getIntent().getBooleanExtra("logout", false)) {
+			this.loginWebView.loadUrl(URLs.URL_LOGOUT);
+		} else {
+			this.loginWebView.loadUrl("http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers");	
+		}
+		
+		
 	}
 	
 	private void init() {
