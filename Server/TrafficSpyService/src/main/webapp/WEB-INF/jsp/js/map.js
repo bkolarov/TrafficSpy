@@ -22,7 +22,7 @@ function getMarkers() {
 		 url:"http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers",
 		 success:function(json) {
 				json.forEach(function(obj) { 
-				addMarker(obj.latitude, obj.longitude, obj.address, obj.id); 
+				addMarker(obj.latitude, obj.longitude, obj.address, obj.id, obj.userEmail); 
 			});
 		 },
 		 error:function(){
@@ -33,8 +33,8 @@ function getMarkers() {
 
 }
 
-function addMarker(latitude, longitude, address, id) {
-	content = '<p><b>' + address + '</b><p> <button type="button" onClick="deleteMarker()">delete</button> '
+function addMarker(latitude, longitude, address, id, userEmail) {
+	content = '<p><b>' + address + '</b><p>' + userEmail + '<p><button type="button" onClick="deleteMarker()">delete</button> '
 	
 	var infowindow = new google.maps.InfoWindow();
 	
