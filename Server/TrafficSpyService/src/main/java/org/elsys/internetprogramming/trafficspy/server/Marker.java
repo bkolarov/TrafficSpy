@@ -19,23 +19,24 @@ public class Marker {
 	private double longitude;
 	@Column
 	private double latitude;
-	//{"markerId":1,"longitude":4.2684,"latitude":23.18968,"address":"ул. Горни Долни Бастун"}
-	
 	@Column
 	private String address;
-	
 	@Column
 	private String city;
-
+	@Column
+	private String userEmail;
+	
 	public Marker() {
 		// Empty constructor
 	}
 	
-	public Marker(long id, double longitude, double latitude, String address) {
+	public Marker(long id, double longitude, double latitude, String address, String city, String userEmail) {
 		this.markerId = id;
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.address = address;
+		this.city = city;
+		this.userEmail = userEmail;
 	}
 
 	public long getId() {
@@ -76,5 +77,13 @@ public class Marker {
 	
 	public String getCity() {
 		return this.city;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 }

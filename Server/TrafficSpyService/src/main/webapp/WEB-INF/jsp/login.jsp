@@ -39,7 +39,7 @@
 
 	<div id="login-box">
 
-		<h3>Login with Username and Password</h3>
+		<h3>Login with Email and Password</h3>
 
 		<c:if test="${not empty error}">
 			<div class="error">${error}</div>
@@ -48,13 +48,12 @@
 			<div class="msg">${msg}</div>
 		</c:if>
 
-		<form name='loginForm'
-			action="<c:url value='/login' />" method='POST'>
+		<form name='loginForm' action="<c:url value='/login' />" method='POST'>
 
 			<table>
 				<tr>
 					<td>e-mail:</td>
-					<td><input type='text' name='username'></td>
+					<td><input id='email' type='text' name='username'></td>
 				</tr>
 				<tr>
 					<td>Password:</td>
@@ -62,12 +61,16 @@
 				</tr>
 				<tr>
 					<td colspan='2'><input name="submit" type="submit"
-						value="submit" /></td>
+						value="submit" onclick="sendEmailToAndroid()" /></td>
 				</tr>
+				<script>
+					function sendEmailToAndroid() {
+						Android.setUserEmail(document.getElementById("email").value);
+					}
+				</script>
 			</table>
 
-			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
+			
 
 		</form>
 	</div>

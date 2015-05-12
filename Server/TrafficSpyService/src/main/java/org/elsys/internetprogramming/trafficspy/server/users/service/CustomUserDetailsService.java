@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	}
 
-	// Converts com.mkyong.users.model.User user to
+	// Converts User user to
 	// org.springframework.security.core.userdetails.User
 	private User buildUserForAuthentication(org.elsys.internetprogramming.trafficspy.server.users.model.User user,
 			List<GrantedAuthority> authorities) {
