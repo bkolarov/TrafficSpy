@@ -4,17 +4,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 public class MainActivity extends Activity {
 	private Map map;
-
-	@Override
-	protected void onResume() {
-		super.stopService(new Intent(super.getApplicationContext(), LocationService.class));
-		super.onResume();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +34,38 @@ public class MainActivity extends Activity {
 		//super.startService(new Intent(super.getApplicationContext(), LocationService.class));
 		super.onPause();
 	}
-
+	
+	@Override
+	protected void onResume() {
+		super.stopService(new Intent(super.getApplicationContext(), LocationService.class));
+		super.onResume();
+	}
+	
 	@Override
 	public void onBackPressed() {
+		
+		MyAlertDialog.createAlertDialog(this,
+				"Are you sure you want to logout?", null, "Yes",
+				new AlertDialogButtonOnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog) {
+						logout();
+					}
+				}, "No", new AlertDialogButtonOnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog) {
+						dialog.dismiss();
+					}
+				});
+	}
+	
+	private void logout() {
 		final Intent intent = new Intent(super.getApplicationContext(), LoginActivity.class);
 		intent.putExtra("logout", true);
 		super.stopService(new Intent(super.getApplicationContext(), LocationService.class));
 		super.startActivity(intent);
 		super.onBackPressed();
 	}
-	
-	
 }

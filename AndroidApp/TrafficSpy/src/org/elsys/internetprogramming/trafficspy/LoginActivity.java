@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -45,10 +46,8 @@ public class LoginActivity extends Activity {
 		} else {
 			this.loginWebView.loadUrl("http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers");	
 		}
-		
-		
 	}
-	
+
 	private void init() {
 		this.loginWebView = (WebView) findViewById(R.id.webView);
 		
