@@ -22,6 +22,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		RestServiceClient.COOKIES = getIntent().getStringExtra("cookie");
+		RestServiceClient.USER_EMAIL = getIntent().getStringExtra("email");
 		
 		this.init();
 		this.map.getMarkers();
@@ -35,7 +36,7 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		super.startService(new Intent(super.getApplicationContext(), LocationService.class));
+		//super.startService(new Intent(super.getApplicationContext(), LocationService.class));
 		super.onPause();
 	}
 
@@ -45,7 +46,7 @@ public class MainActivity extends Activity {
 		intent.putExtra("logout", true);
 		super.stopService(new Intent(super.getApplicationContext(), LocationService.class));
 		super.startActivity(intent);
-		super.finish();
+		super.onBackPressed();
 	}
 	
 	

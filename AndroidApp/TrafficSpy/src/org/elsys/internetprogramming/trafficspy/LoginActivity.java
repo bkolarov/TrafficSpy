@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.CookieManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -26,6 +27,9 @@ public class LoginActivity extends Activity {
 	private final String TAG = getClass().getSimpleName();
 	private WebView loginWebView;
 	private String cookies;
+	private String userEmail;
+	
+	private boolean mapActivityStarted = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,9 @@ public class LoginActivity extends Activity {
 		this.setWebViewSettings();
 		
 		if (getIntent().getBooleanExtra("logout", false)) {
+			Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show();
 			this.loginWebView.loadUrl(URLs.URL_LOGOUT);
+			this.loginWebView.clearCache(true);
 		} else {
 			this.loginWebView.loadUrl("http://ec2-52-28-51-57.eu-central-1.compute.amazonaws.com:8181/markers");	
 		}
@@ -53,24 +59,20 @@ public class LoginActivity extends Activity {
 		final WebSettings webViewSettings = this.loginWebView.getSettings();
 		webViewSettings.setJavaScriptEnabled(true);
 		webViewSettings.setDomStorageEnabled(true);
-		webViewSettings.setDatabaseEnabled(true);
-		webViewSettings.setAppCacheEnabled(true);
 		
+		this.loginWebView.addJavascriptInterface(this, "Android");
 		this.loginWebView.setWebChromeClient(new WebChromeClient());
 		this.loginWebView.setWebViewClient(new WebViewClient() {
 			
-			
-			
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				Log.i(TAG, "onPageStarted(): " + url);
+			}
+
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				view.loadUrl(url);
 				return true;
-			}
-
-			@Override
-			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-				// TODO Auto-generated method stub
-				super.onPageStarted(view, url, favicon);
 			}
 
 			@Override
@@ -81,16 +83,26 @@ public class LoginActivity extends Activity {
 					Log.i(TAG, cookies);
 					Toast.makeText(getApplicationContext(), cookies, Toast.LENGTH_SHORT).show();
 					startMapActivity();
-				}
+				} 
 			}
 			
 		});
 	}
 	
 	private void startMapActivity() {
-		final Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra("cookie", this.cookies);
-		startActivity(intent);
-		super.finish();
+		if (!this.mapActivityStarted) {
+			this.mapActivityStarted = true;
+			
+			final Intent intent = new Intent(this, MainActivity.class);
+			intent.putExtra("cookie", this.cookies);
+			intent.putExtra("email", this.userEmail);
+			startActivity(intent);
+			super.finish();
+		}
+	}
+	
+	@JavascriptInterface
+	public void setUserEmail(String email) {
+		this.userEmail = email;
 	}
 }

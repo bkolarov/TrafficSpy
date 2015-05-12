@@ -55,7 +55,7 @@ public class LocationService extends Service implements MyLocationListener, Rest
 		address = address.replace(" " + city, "").replace("„", "")
 				.replace("“", "").replace("â", "q");
 		final Marker marker = new Marker(longitude, latitude,
-				address, city);
+				address, city, RestServiceClient.USER_EMAIL);
 		if (this.restServiceClient != null && !this.restServiceClient.isExecuting()) {
 			this.restServiceClient = new RestServiceClient(this);
 			this.restServiceClient.doPost(URLs.URL_POST_CURRENT_LOCATION, new Gson().toJson(marker));

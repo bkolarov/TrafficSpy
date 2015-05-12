@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -20,6 +21,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -27,7 +31,7 @@ import com.google.gson.Gson;
 import com.ibm.icu.text.Transliterator;
 
 public class Map implements OnCameraChangeListener, OnMapClickListener,
-		MyLocationListener {
+		MyLocationListener, OnMarkerClickListener {
 	public static final String BROADCAST_RECEIVER_BANE = "LocationUpdates";
 	private final String TAG = "MAP";
 
@@ -48,6 +52,7 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 		this.map.setOnCameraChangeListener(this);
 		this.map.setTrafficEnabled(true);
 		this.map.setOnMapClickListener(this);
+		this.map.setOnMarkerClickListener(this);
 		this.gson = new Gson();
 	}
 
@@ -100,25 +105,32 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 		return latin;
 	}
 
-	private void sendMarker(String address,final LatLng point) {
+	private void sendMarker(String address, final LatLng point) {
 		Log.i(TAG, address);
 		final String[] addressSplitted = address.split(" ");
 		final String city = addressSplitted[addressSplitted.length - 1];
+
 		address = address.replace(" " + city, "").replace("„", "")
-				.replace("“", "").replace("â", "q").replace("ž", "zh").replace("ŝ", "sht").trim();
+				.replace("“", "").replace("â", "q").replace("ž", "zh")
+				.replace("ŝ", "sht").trim();
+
 		final Marker marker = new Marker(point.longitude, point.latitude,
-				address, city);
+				address, city, RestServiceClient.USER_EMAIL);
 
 		final String locationJsonString = this.gson.toJson(marker);
-		final RestServiceClient restServiceClient = new RestServiceClient(new RestClientCallback() {
-			
-			@Override
-			public void onResponse(String response) {
-				Log.i(TAG, "response");
-				map.addMarker(new MarkerOptions().position(point));
-			}
-		});
-		
+		final RestServiceClient restServiceClient = new RestServiceClient(
+				new RestClientCallback() {
+
+					@Override
+					public void onResponse(String response) {
+						Log.i(TAG, "response");
+						map.addMarker(new MarkerOptions()
+								.position(point)
+								.icon(BitmapDescriptorFactory
+										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+					}
+				});
+
 		restServiceClient.doPost(URLs.URL_POST_NEW_MARKER, locationJsonString);
 	}
 
@@ -132,15 +144,32 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 							final JSONArray markersArray = new JSONArray(
 									response);
 
-							for (int markerCount = 0; markerCount < markersArray.length(); markerCount++) {
-								final JSONObject marker = markersArray.getJSONObject(markerCount);
+							for (int markerCount = 0; markerCount < markersArray
+									.length(); markerCount++) {
+								final JSONObject marker = markersArray
+										.getJSONObject(markerCount);
 								Log.i(TAG, marker.toString());
-								
-								final double latitude = marker.getDouble("latitude");
-								final double longitude = marker.getDouble("longitude");
-								map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
+
+								final double latitude = marker
+										.getDouble("latitude");
+								final double longitude = marker
+										.getDouble("longitude");
+								final MarkerOptions markerOptions = new MarkerOptions()
+										.position(new LatLng(latitude,
+												longitude));
+								markerOptions.title(marker
+										.getString("userEmail"));
+								markerOptions.snippet(marker.getString("id"));
+
+								if (marker.get("userEmail").equals(
+										RestServiceClient.USER_EMAIL)) {
+									markerOptions.icon(BitmapDescriptorFactory
+											.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+								}
+
+								map.addMarker(markerOptions);
 							}
-							
+
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -159,5 +188,51 @@ public class Map implements OnCameraChangeListener, OnMapClickListener,
 		final LatLng latLng = new LatLng(latitude, longitude);
 
 		this.moveCamera(latLng);
+	}
+
+	@Override
+	public boolean onMarkerClick(final com.google.android.gms.maps.model.Marker marker) {
+		if (marker.getTitle().equals(RestServiceClient.USER_EMAIL)) {
+
+			MyAlertDialog.createAlertDialog(this.context,
+					"Are you sure you want to delete this marker?", null,
+					"Yes", new AlertDialogButtonOnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog) {
+							deleteMarker(marker);
+						}
+					}, "No", new AlertDialogButtonOnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog) {
+							dialog.dismiss();
+						}
+					});
+
+			return true;
+		}
+		return false;
+	}
+
+	private void deleteMarker(final com.google.android.gms.maps.model.Marker marker) {
+		
+		Toast.makeText(context, "delete: " + marker.getTitle(),
+				Toast.LENGTH_SHORT).show();
+		
+		final RestServiceClient restClient = new RestServiceClient(
+				new RestClientCallback() {
+
+					@Override
+					public void onResponse(String response) {
+						Log.i(TAG, response);
+						if (response.equals("200")) {
+							marker.setVisible(false);
+							marker.remove();
+						}
+					}
+				});
+
+		restClient.doDelete(URLs.URL_DELETE, marker.getSnippet());
 	}
 }
